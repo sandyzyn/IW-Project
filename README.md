@@ -1,5 +1,11 @@
-This project worked with the honey bee genome 
+## Comparative Analysis of gRNA Design Software Tools for CRISPR Application on *orco* in Honey Bees
 
-The tools Benchling, Guidescan2, and Geneious were used 
 
-137 gRNA were compared/analyzed and used to predict unified specifcity scores
+This project worked with the honey bee (Apis mellifera) genome 
+
+The following tools were used
+- Benchling
+- Guidescan2
+- Geneious 
+
+137 gRNA were compared/analyzed and used to predict unified specificity scores
