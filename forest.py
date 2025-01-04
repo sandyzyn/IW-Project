@@ -71,6 +71,7 @@ def feature_importance(model, X):
     plt.show()
 
 
+
 if __name__ == "__main__":
     model, mse, r2, X_test, y_test, y_hat = train(X, y)
     print(f"Mean Squared Error: {mse}")
