@@ -3,16 +3,16 @@ from scipy.stats import spearmanr, wilcoxon
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-data = pd.read_csv('orco gene - MIT-Broad - Guidescan Comparisons.csv')
+data = pd.read_csv('orco gene - Guidescan-Geneious Comparison.csv')
 
 results = {
     'Exon': [],
-    'Average_Benchling': [],
     'Average_Guidescan2': [],
-    'Benchling_std': [],
+    'Average_Geneious': [],
     'Guidescan2_std': [],
+    'Geneious_std': [],
     'Wilcoxon p-value (Paired)': [],
-    'Spearman_Corr': [],
+    'Spearman_Correlation': [],
     'Spearman_p-value': []
 }
 
@@ -27,11 +27,11 @@ for i in range(num_exons):
     exon_data = data.iloc[:, [start_col + 1, start_col + 2]].dropna()
 
     # Rename 
-    exon_data.columns = ['Benchling', 'Guidescan2']
+    exon_data.columns = ['Guidescan2', 'Geneious']
 
     # only want numeric data
-    exon_data['Benchling'] = pd.to_numeric(exon_data['Benchling'], errors='coerce')
     exon_data['Guidescan2'] = pd.to_numeric(exon_data['Guidescan2'], errors='coerce')
+    exon_data['Geneious'] = pd.to_numeric(exon_data['Geneious'], errors='coerce')
     exon_data = exon_data.dropna()
 
     if exon_data.empty:
@@ -40,40 +40,41 @@ for i in range(num_exons):
     exon_data['Exon'] = f'Exon {i + 1}'
     boxplot_data.append(exon_data)
 
-    avg_benchling = exon_data['Benchling'].mean()
     avg_guidescan2 = exon_data['Guidescan2'].mean()
-    std_benchling = exon_data['Benchling'].std()
+    avg_geneious = exon_data['Geneious'].mean()
     std_guidescan2 = exon_data['Guidescan2'].std()
+    std_geneious = exon_data['Geneious'].std()
 
-    paired_wilcoxon = wilcoxon(exon_data['Benchling'], exon_data['Guidescan2'])
+    paired_wilcoxon = wilcoxon(exon_data['Guidescan2'], exon_data['Geneious'])
 
-    spearman_corr, spearman_pval = spearmanr(exon_data['Benchling'], exon_data['Guidescan2'])
+    spearman_corr, spearman_pval = spearmanr(exon_data['Guidescan2'], exon_data['Geneious'])
 
     results['Exon'].append(f'Exon {i + 1}')
-    results['Average_Benchling'].append(avg_benchling)
     results['Average_Guidescan2'].append(avg_guidescan2)
-    results['Benchling_std'].append(std_benchling)
+    results['Average_Geneious'].append(avg_geneious)
     results['Guidescan2_std'].append(std_guidescan2)
+    results['Geneious_std'].append(std_geneious)
     results['Wilcoxon p-value (Paired)'].append(paired_wilcoxon.pvalue)
-    results['Spearman_Corr'].append(spearman_corr)
+    results['Spearman_Correlation'].append(spearman_corr)
     results['Spearman_p-value'].append(spearman_pval)
+
 
 boxplot = pd.concat(boxplot_data)
 
 # Save to Excel
 results = pd.DataFrame(results)
-results.to_excel('comparisons_B_mit_GS.xlsx', index=False)
+results.to_excel('comparisons_G_GS.xlsx', index=False)
 
-# Boxplot visual
+# Boxplot visual 
 plt.figure(figsize=(10, 6))
 sns.boxplot(
-    data=boxplot.melt(id_vars=['Exon'], value_vars=['Benchling', 'Guidescan2'], 
+    data=boxplot.melt(id_vars=['Exon'], value_vars=['Guidescan2', 'Geneious'], 
                          var_name='Software', value_name='Specificity Score'),
     x='Exon',
     y='Specificity Score',
     hue='Software',
 )
-plt.title('Comparison of Specificity Scores: Benchling (MIT-Broad) vs Guidescan2')
+plt.title('Comparison of Specificity Scores: Guidescan2 vs Geneious')
 plt.xlabel('Exon')
 plt.ylabel('Specificity Score')
 plt.legend(title='Software')
@@ -82,28 +83,28 @@ plt.show()
 
 # Correlation visual
 correlation = pd.concat(
-    [data.iloc[:, [1]].rename(columns={data.columns[1]: 'Benchling'}),
-     data.iloc[:, [2]].rename(columns={data.columns[2]: 'Guidescan2'})],
+    [data.iloc[:, [1]].rename(columns={data.columns[1]: 'Guidescan2'}),
+     data.iloc[:, [2]].rename(columns={data.columns[2]: 'Geneious'})],
     axis=1
 ).dropna()
 
-correlation['Benchling'] = pd.to_numeric(correlation['Benchling'], errors='coerce')
 correlation['Guidescan2'] = pd.to_numeric(correlation['Guidescan2'], errors='coerce')
+correlation['Geneious'] = pd.to_numeric(correlation['Geneious'], errors='coerce')
 
 correlation = correlation.dropna()
 
 plt.figure(figsize=(12,6))
 
 sns.scatterplot(
-    data=boxplot, 
-    x='Benchling',
-    y='Guidescan2',
+    data=boxplot,  
+    x='Guidescan2',
+    y='Geneious',
     hue='Exon',  
 )
 
-plt.title('Correlation Between Benchling(MIT-Broad) and Guidescan2 Scores', fontsize=14)
-plt.xlabel('Benchling Specificity Score', fontsize=12)
-plt.ylabel('Guidescan2 Specificity Score', fontsize=12)
-plt.legend(title='Exon', bbox_to_anchor=(1.05, 1), loc='upper left')  
+plt.title('Correlation Between Guidescan2 and Geneious Scores', fontsize=14)
+plt.xlabel('Guidescan2 Specificity Score', fontsize=12)
+plt.ylabel('Geneious Specificity Score', fontsize=12)
+plt.legend(title='Exon', bbox_to_anchor=(1.05, 1), loc='upper left') 
 plt.tight_layout()
 plt.show()

@@ -58,16 +58,16 @@ for i in range(num_exons):
     results['Spearman_Corr'].append(spearman_corr)
     results['Spearman_p-value'].append(spearman_pval)
 
-boxplot_df = pd.concat(boxplot_data)
+boxplot = pd.concat(boxplot_data)
 
 # Save to Excel
-results_df = pd.DataFrame(results)
-results_df.to_excel('comparisons_B_cfd_GS.xlsx', index=False)
+results = pd.DataFrame(results)
+results.to_excel('comparisons_B_cfd_GS.xlsx', index=False)
 
 # Boxplot visual
 plt.figure(figsize=(10, 6))
 sns.boxplot(
-    data=boxplot_df.melt(id_vars=['Exon'], value_vars=['Benchling', 'Guidescan2'], 
+    data=boxplot.melt(id_vars=['Exon'], value_vars=['Benchling', 'Guidescan2'], 
                          var_name='Software', value_name='Specificity Score'),
     x='Exon',
     y='Specificity Score',
@@ -81,21 +81,21 @@ plt.tight_layout()
 plt.show()
 
 # Correlation visual
-regplot_data = pd.concat(
+correlation = pd.concat(
     [data.iloc[:, [1]].rename(columns={data.columns[1]: 'Benchling'}),
      data.iloc[:, [2]].rename(columns={data.columns[2]: 'Guidescan2'})],
     axis=1
 ).dropna()
 
-regplot_data['Benchling'] = pd.to_numeric(regplot_data['Benchling'], errors='coerce')
-regplot_data['Guidescan2'] = pd.to_numeric(regplot_data['Guidescan2'], errors='coerce')
+correlation['Benchling'] = pd.to_numeric(correlation['Benchling'], errors='coerce')
+correlation['Guidescan2'] = pd.to_numeric(correlation['Guidescan2'], errors='coerce')
 
-regplot_data = regplot_data.dropna()
+correlation = correlation.dropna()
 
 plt.figure(figsize=(12,6))
 
 sns.scatterplot(
-    data=boxplot_df,  
+    data=boxplot,  
     x='Benchling',
     y='Guidescan2',
     hue='Exon',  
