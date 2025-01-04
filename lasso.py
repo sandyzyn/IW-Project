@@ -1,16 +1,15 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Lasso
 from sklearn.metrics import mean_squared_error, r2_score
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.decomposition import PCA
 
-
 file_path = 'orco gene - All comparison.csv'  
 data = pd.read_csv(file_path)
 
-#break down data
+# Break down data
 all_exons = []
 num_exons = 8
 
@@ -41,7 +40,7 @@ y = min_max_scaler.fit_transform(reduced)
 
 def train(X, y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    model = LinearRegression()
+    model = Lasso(alpha=1)  
     model.fit(X_train, y_train.ravel())
     y_hat = model.predict(X_test)
     mse = mean_squared_error(y_test, y_hat)
@@ -50,7 +49,7 @@ def train(X, y):
 
 def predict(model):
     try:
-        print("\nEnter new scores to predict the unified score:")
+        print("\nEnter scores to predict the unified score:")
         benchling_mit = float(input("Benchling_MIT: "))
         geneious = float(input("Geneious: "))
         guidescan2 = float(input("Guidescan2: "))
@@ -58,9 +57,9 @@ def predict(model):
         input_data = pd.DataFrame([[benchling_mit, geneious, guidescan2, benchling_cfd]],
                                   columns=['Benchling_MIT', 'Geneious', 'Guidescan2', 'Benchling_CFD'])
         predicted_score = model.predict(input_data)[0]
-        print(f"\nPredicted Unified Score: {predicted_score}")
+        print(f"\nPredicted Score: {predicted_score}")
     except ValueError:
-        print("Invalid input. Please enter numeric values.")
+        print("Enter a numeric value")
 
 def feature_importance(model, X):
     importance = model.coef_  
@@ -68,7 +67,7 @@ def feature_importance(model, X):
     plt.barh(features, importance)
     plt.xlabel("Importance")
     plt.ylabel("Software")
-    plt.title("Feature Importance for Linear Regression")
+    plt.title("Feature Importance for Lasso Regression")
     plt.show()
 
 if __name__ == "__main__":
@@ -82,7 +81,7 @@ if __name__ == "__main__":
         print("2. Show Feature Importance")
         print("3. Exit")
 
-        choice = input("Choose an option: ").strip()
+        choice = input("Choose an option ").strip()
         if choice == "1":
             predict(model)
         elif choice == "2":
@@ -91,4 +90,4 @@ if __name__ == "__main__":
             print("Exiting program.")
             break
         else:
-            print("Invalid choice. Please try again.")
+            print("not valid choice")

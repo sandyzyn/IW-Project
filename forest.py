@@ -67,14 +67,14 @@ def feature_importance(model, X):
     plt.barh(features, importance)
     plt.xlabel("Importance")
     plt.ylabel("Software")
-    plt.title("Feature Importance in Predicting Unified Score")
+    plt.title("Feature Importance for Random Forest Regression")
     plt.show()
 
 
 if __name__ == "__main__":
     model, mse, r2, X_test, y_test, y_hat = train(X, y)
     print(f"Mean Squared Error: {mse}")
-    print(f"\n R² Score: {r2}")
+    print(f"R² Score: {r2}")
 
     while True:
         print("\nOptions:")
