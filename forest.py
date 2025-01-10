@@ -74,7 +74,6 @@ def feature_importance(model, X):
     plt.show()
 
 
-
 if __name__ == "__main__":
     model, mse, r2, X_test, y_test, y_hat = train(X, y)
     print(f"Mean Squared Error: {mse}")
@@ -92,7 +91,7 @@ if __name__ == "__main__":
         elif choice == "2":
             feature_importance(model, X)
         elif choice == "3":
-            print("Exiting program.")
+            print("Exiting")
             break
         else:
-            print("Invalid choice. Please try again.")
+            print("not valid choice")

@@ -92,7 +92,7 @@ if __name__ == "__main__":
         elif choice == "2":
             feature_importance(model, X)
         elif choice == "3":
-            print("Exiting program.")
+            print("Exiting")
             break
         else:
-            print("Invalid choice. Please try again.")
+            print("not valid choice")
