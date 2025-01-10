@@ -1,7 +1,7 @@
 ## Comparative Analysis of gRNA Design Software Tools for CRISPR Application on *orco* in Honey Bees
 
 
-This project worked with the honey bee (Apis mellifera) genome 
+This project worked with the honey bee (*Apis mellifera*) genome 
 
 The following tools were used
 - Benchling
