@@ -57,7 +57,10 @@ def predict(model):
         input_data = pd.DataFrame([[benchling_mit, geneious, guidescan2, benchling_cfd]],
                                   columns=['Benchling_MIT', 'Geneious', 'Guidescan2', 'Benchling_CFD'])
         predicted_score = model.predict(input_data)[0]
-        print(f"\nPredicted Unified Score: {predicted_score}")
+        if predicted_score < 0:
+            print("\nThe scores inputted won't result in accurate prediction. Retype in accurate values")
+        else:
+            print(f"\nPredicted Score: {predicted_score}")
     except ValueError:
         print("Invalid input. Please enter numeric values.")
 
